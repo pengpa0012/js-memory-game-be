@@ -2,9 +2,11 @@ const express = require("express")
 const bodyParser = require("body-parser")
 const cors = require("cors")
 const route = require("./routes")
+const connectDB = require("./db")
 
 const app = express()
 
+connectDB()
 // middleware
 app.use(cors())
 app.use(express.json())
