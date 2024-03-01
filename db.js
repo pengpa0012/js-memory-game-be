@@ -1,4 +1,3 @@
-// db hereconst dotenv = require("dotenv")
 const mongoose = require("mongoose")
 require("dotenv").config()
 
