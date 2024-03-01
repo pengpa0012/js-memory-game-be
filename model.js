@@ -6,4 +6,18 @@ const scoreSchema = mongoose.Schema({
   date_created: {type: Date, default: Date.now()}
 });
 
-module.exports = mongoose.model('Scores', scoreSchema);
+const userSchema = mongoose.Schema({
+  username: {
+    type: String,
+    required: true
+  },
+  password: {
+    type: String,
+    required: true
+  }
+});
+
+module.exports = {
+  User:  mongoose.model('Users', userSchema),
+  Score: mongoose.model('Scores', scoreSchema),
+}
