@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken")
 require("dotenv").config()
 const router = express.Router()
 const API = require('./utils.js');
+const cookie = require("cookie")
 const {Score, User} = require("./model.js")
 
 router.post("/signup", async (req, res) => {
@@ -32,6 +33,15 @@ router.post("/login", async (req, res) => {
 
   if(result.length > 0 && await bcrypt.compare(password, result[0].password)) {
     const token = jwt.sign({username}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: "30d"})
+
+    // Set the token as an HTTP cookie
+    res.setHeader('Set-Cookie', cookie.serialize('access_token', token, {
+      httpOnly: true,
+      maxAge: 30 * 24 * 60 * 60, // 30 days in seconds
+      sameSite: 'None',
+      secure: false, // Set to true in production,
+    }))
+
     res.status(200).send({message: "Login Successfully", accessToken: token})
   } else {
     res.status(500).send({message: "Error login"})

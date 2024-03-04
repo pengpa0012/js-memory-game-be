@@ -2,8 +2,7 @@ require("dotenv").config()
 const jwt = require("jsonwebtoken")
 
 const authenticateKey = (req, res, next) => {
-  const token = req.header("Authorization").split(" ")[1]
-  console.log(token)
+  const token = req.cookies.access_token
   // If there is no token, return an error
   if (!token) {
     return res.status(401).send({
