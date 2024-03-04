@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 require("dotenv").config()
 const router = express.Router()
-const API = require('./utils.js');
+const { authenticateKey } = require('./utils.js')
 const cookie = require("cookie")
 const {Score, User} = require("./model.js")
 
@@ -39,7 +39,7 @@ router.post("/login", async (req, res) => {
       httpOnly: true,
       maxAge: 30 * 24 * 60 * 60, // 30 days in seconds
       sameSite: 'None',
-      secure: false, // Set to true in production,
+      secure: true, // Set to true in production,
     }))
 
     res.status(200).send({message: "Login Successfully", accessToken: token})
@@ -49,7 +49,7 @@ router.post("/login", async (req, res) => {
 })
 
 
-router.get("/getScores", API.authenticateKey, async (req, res) => {
+router.get("/getScores", authenticateKey, async (req, res) => {
   const result = await Score.find()
 
   if(result) {
@@ -59,7 +59,7 @@ router.get("/getScores", API.authenticateKey, async (req, res) => {
   }
 })
 
-router.post("/createScore", API.authenticateKey, async (req, res) => {
+router.post("/createScore", authenticateKey, async (req, res) => {
   const {difficulty, score} = req.body
   const newScore = new Score({
     difficulty,
@@ -75,6 +75,12 @@ router.post("/createScore", API.authenticateKey, async (req, res) => {
   } else {
     return res.status(500).json({error: "Error"})
   }
+})
+
+router.post('/logout', authenticateKey, (req, res) => {
+  // Clear the token on the client side
+  res.cookie("access_token", "", { httpOnly: true, secure: true, sameSite: "none", expires: new Date(0), path: '/' });
+  res.json({ message: 'Logout successfully' })
 })
 
 module.exports = router
