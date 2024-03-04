@@ -32,7 +32,7 @@ router.post("/login", async (req, res) => {
 
   if(result.length > 0 && await bcrypt.compare(password, result[0].password)) {
     const token = jwt.sign({username}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: "30d"})
-    res.status(200).send({message: "Login Successfully", accessToken: token, result})
+    res.status(200).send({message: "Login Successfully", accessToken: token})
   } else {
     res.status(500).send({message: "Error login"})
   }
