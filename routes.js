@@ -53,9 +53,9 @@ router.get("/getScores", authenticateKey, async (req, res) => {
   const result = await Score.find()
 
   if(result) {
-    return res.status(200).json({data: result})
+    res.status(200).json({data: result})
   } else {
-    return res.status(500).json({error: "Error"})
+    res.status(500).json({error: "Error"})
   }
 })
 
@@ -71,9 +71,9 @@ router.post("/createScore", authenticateKey, async (req, res) => {
 
 
   if(result) {
-    return res.status(200).json({data: result, message: "Score Created!"})
+    res.status(200).json({data: result, message: "Score Created!"})
   } else {
-    return res.status(500).json({error: "Error"})
+    res.status(500).json({error: "Error"})
   }
 })
 
